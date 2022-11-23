@@ -27,8 +27,9 @@ currDir=$(pwd)
 
 # read configuration file
 source ./build_vm.cfg
+source ./ancillary.conf
 
-vmName="msr2400-demo"
+#vmName="msr2400-demo"
 
 remove_vm()
 {
@@ -37,4 +38,5 @@ remove_vm()
 }
 
 ###### Main
-remove_vm
+#remove_vm
+echo "VM Name: $vmName"

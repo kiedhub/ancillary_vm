@@ -1,0 +1,79 @@
+#!/bin/bash
+
+SCRIPTNAME="save"
+
+##############################################################################
+# common script header (adapt log file name)
+# The script has to be run as root
+#if [[ $EUID -ne 0 ]]; then
+#   echo "This script must be run as root!"
+#   echo "Issue a 'sudo bash' before running it."
+#   exit 1
+#fi
+
+# grab current directory
+currDir=$(pwd)
+
+## set up logging
+## first store existing output redirects
+## use "exec 1>$STDOUT 2>$STDERR" whenever you want to restore 
+#STDOUT=`readlink -f /proc/$$/fd/1`
+#STDERR=`readlink -f /proc/$$/fd/2`
+#exec > "$currDir/$SCRIPTNAME".log 2>&1
+#exec < /dev/null
+#set -x
+
+##############################################################################
+
+SCRIPT_SOURCE=${BASH_SOURCE[0]}
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+GIT_DIR="/home/ralf/github/casa_libs/virtual-machines/ancillary"
+
+echo "ls $SCRIPT_DIR"
+ls $SCRIPT_DIR
+
+###### Main
+#sudo su -c \
+#  "cp -R \
+#  $SCRIPT_DIR/*.conf \
+#  $SCRIPT_DIR/save \
+#  $SCRIPT_DIR/build_vm \
+#  $SCRIPT_DIR/libs/ \
+#  $GIT_DIR/" ralf
+
+sudo su -c \
+  "rsync -av --progress $SCRIPT_DIR/* $GIT_DIR \
+  --exclude msr2400-demo-build \
+  --exclude pkt-gen-demo-build \
+  --exclude backup \
+  --exclude vmc/vmc.img \
+  --exclude vmc/*.qcow2" ralf
+
+echo "ls $GIT_DIR"
+ls $GIT_DIR
+#ls $GIT_DIR/vmc
+
+! [ $USER = "ralf" ] && { echo "Error: Wrong user for git actions, needs to be user \"ralf\""; exit; }
+
+cd $GIT_DIR
+echo "git pull"
+git pull
+git add .
+git commit -m "saving scripts"
+echo "git push"
+git push
+
+cd $currDir
+
+#& cd /home/ralf/casa_libs/virtual-machines/ancillary & pwd & \
+#  pwd & \
+#  git pull & \
+#  git add . & \
+#  git commit -m "saving script" & \
+#  git push 
+
+#sudo su -c "git pull" ralf
+#sudo su -c "git add ." ralf
+#sudo su -c "git comment -m \"saving script\"" ralf
+#sudo su -c "git push" ralf
+#exit

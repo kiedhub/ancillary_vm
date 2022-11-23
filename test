@@ -1,0 +1,61 @@
+#!/bin/bash
+
+SCRIPTNAME="remove"
+
+##############################################################################
+# common script header (adapt log file name)
+# The script has to be run as root
+#if [[ $EUID -ne 0 ]]; then
+#   echo "This script must be run as root!"
+#   echo "Issue a 'sudo bash' before running it."
+#   exit 1
+#fi
+
+# grab current directory
+currDir=$(pwd)
+
+## set up logging
+## first store existing output redirects
+## use "exec 1>$STDOUT 2>$STDERR" whenever you want to restore 
+#STDOUT=`readlink -f /proc/$$/fd/1`
+#STDERR=`readlink -f /proc/$$/fd/2`
+#exec > "$currDir/$SCRIPTNAME".log 2>&1
+#exec < /dev/null
+#set -x
+
+##############################################################################
+
+# read configuration file
+
+###### Main
+# get username
+cd ~
+homeDir=$(pwd)
+cd $currDir
+
+if [ $homeDir = "/root" ]; then
+  user="root"
+else
+  # user not root
+  user=$(echo $homeDir | sed -e 's/\// /g' | awk '{ print $2}')
+  echo $user
+fi
+
+# copying identity file and setting ownership
+if [ -d ~/.ssh ]; then
+  echo "Copying identity file"
+  cp -f $buildDir/$vmSshKeyName ~/.ssh/
+  chown $user:$user ~/.ssh/$vmSshKeyName
+else
+  echo "~/.ssh does not exist, creating it."
+  mkdir ~/.ssh
+  echo "Copying identity file"
+  cp -f $buildDir/$vmSshKeyName ~/.ssh/
+  chown $user:$user ~/.ssh/$vmSshKeyName
+fi
+
+if [ ! $user = "root" ];then
+  echo "user not root, set owner"
+else
+  echo "user root, nothing to do"
+fi

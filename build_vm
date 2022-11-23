@@ -1,0 +1,93 @@
+#!/bin/bash
+
+SCRIPTNAME="build_vm"
+
+##############################################################################
+# common script header (adapt log file name)
+# The script has to be run as root
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root!"
+   echo "Issue a 'sudo bash' before running it."
+   exit 1
+fi
+
+# grab current directory
+currDir=$(pwd)
+
+## set up logging
+## first store existing output redirects
+## use "exec 1>$STDOUT 2>$STDERR" whenever you want to restore 
+#STDOUT=`readlink -f /proc/$$/fd/1`
+#STDERR=`readlink -f /proc/$$/fd/2`
+#exec > "$currDir/$SCRIPTNAME".log 2>&1
+#exec < /dev/null
+#set -x
+
+##############################################################################
+
+#SERVICE_LIBRARY="aaa"
+DEBUG=true
+
+# grab configuration
+SCRIPT_SOURCE=${BASH_SOURCE[0]}
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+LIBS_DIR="$SCRIPT_DIR/libs"
+
+. $LIBS_DIR/build.sh
+. $LIBS_DIR/cloud_init.sh
+
+cd $SCRIPT_DIR
+
+usage()
+{
+  echo
+  echo "Building a VM based on its configuration script and cloud-init config"
+  echo "Usage:    build_vm <vm-config-name>"
+  echo "Example:  build_vm ancillary.conf"
+  echo
+}
+
+[ "$#" -lt 1 ] && { echo "Missing parameter" ; usage ; exit ; }
+[ "$#" -gt 1 ] && { echo "Too many parameters" ; usage ; exit ; }
+
+vmToBuild=$1
+
+! [ -e "$SCRIPT_DIR/$vmToBuild" ] && { \
+ echo "VM configuration file \"$SCRIPT_DIR/$vmToBuild\" not found!" ;\
+ exit;\
+}
+
+source $SCRIPT_DIR/$vmToBuild
+
+case $vmToBuild in
+  ancillary.conf)
+    echo "ancillary.conf"
+    ;;
+  pkt-gen.conf)
+    echo "pkt-gen.conf"
+    ;;
+  *)
+    echo "everything else.conf"
+    ;;
+esac
+
+[ $DEBUG = true ] && echo "User: $user, homeDir: $homeDir, currDir: $currDir"
+
+###### Main
+get_user_info
+setup_environment
+check_management_network
+check_existing_vm
+create_ssh_keypair
+create_cloud_init
+create_cloud_network_config
+create_seed_image
+grab_cloud_image
+move_vm_files
+resize_vm_image
+create_virtual_machine
+copy_identity_file
+print_final_message
+
+exit
+

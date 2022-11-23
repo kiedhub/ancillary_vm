@@ -4,7 +4,7 @@ KVM
 
 ##Configuration
 ### Important configuration parameters
-Chose a name for the virtual machine, that does not exist. If unsure check with ´´´virsh list --all´´´
+Chose a name for the virtual machine, that does not exist. If unsure check with ```virsh list --all```
 vmName
 
 ### VM interface and IP settings

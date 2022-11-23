@@ -172,6 +172,7 @@ create_cloud_network_config()
   
   [ $DEBUG = true ] && echo "  Creating $BUILD_DIR/$netConfFileName"
 
+  # Currently only static configuration is supported, a later version may be able to use dhcp
   echo "version: 2
 ethernets:
   $vmMgmtIf:

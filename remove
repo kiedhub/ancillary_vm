@@ -26,8 +26,9 @@ currDir=$(pwd)
 ##############################################################################
 
 # read configuration file
-source ./build_vm.cfg
-source ./ancillary.conf
+#source ./build_vm.cfg
+#source ./ancillary.conf
+source ./lacp-vm.conf
 
 #vmName="msr2400-demo"
 
@@ -38,5 +39,5 @@ remove_vm()
 }
 
 ###### Main
-#remove_vm
-echo "VM Name: $vmName"
+remove_vm
+#echo "VM Name: $vmName"

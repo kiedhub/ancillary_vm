@@ -5,8 +5,10 @@ This VM creation tool is tested to run on a Ubuntu 20.04 host. Virtualization ne
 
 ## Clone VM creation tool
 The tool is a lean set of files. Running the build script will download the Ubuntu image version (20.04 or 18.04) defined in the configuration file. To clone the repo, issue the following command on the host server cli and cd into the new directory:
-```$ git clone https://github.com/kiedhub/ancillary_vm.git
-$ cd ancillary_vm```
+```
+$ git clone https://github.com/kiedhub/ancillary_vm.git
+$ cd ancillary_vm
+```
 
 ## Configuration
 Before running the build script, some VM specific configurations need to be done. 

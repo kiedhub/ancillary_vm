@@ -1,14 +1,14 @@
-#Ancillary VM
+# Ancillary VM
 
 ## Prerequisites
 This VM creation tool is tested to run on a Ubuntu 20.04 host. Virtualization needs to be enabled and qemu/kvm installed. 
 
-##Clone VM creation tool
+## Clone VM creation tool
 The tool is a lean set of files. Running the build script will download the Ubuntu image version (20.04 or 18.04) defined in the configuration file. To clone the repo, issue the following command on the host server cli and cd into the new directory:
 ```$ git clone https://github.com/kiedhub/ancillary_vm.git
 $ cd ancillary_vm```
 
-##Configuration
+## Configuration
 Before running the build script, some VM specific configurations need to be done. 
 
 ### Important configuration parameters
@@ -16,12 +16,12 @@ Chose a name for the virtual machine, that does not exist. If unsure check with 
 vmName="ancillary"
 
 ### Network interfaces
-####Data and service interfaces
+#### Data and service interfaces
 In order to provide appropriate networking performance, interfaces will be passed through to the VM and they won't be available on the host system anymore. It is important to identify and chose the right interfaces. Generally one interface can be enough and all functions/services can be separated using VLANs. If a subscriber gets simulated and services are used, then it may make sense to use 2 interfaces, one for data and one for services.
 Finding available interfaces can be done via
 ```sudo lshw -c network -businfo```
 
-####Management interface
+#### Management interface
 The interface connected to the management network is a virtual interface using virtio. There is no need to reserve a physical interface. It is important thought to think about the management connectivity. The current implementation makes use of a linux bridge for management. The easiest way to configure management to virtual machines is to connect the physical management interface on the host system to a virtual bridge and configure the host management IP address on the bridge.
 
 The following example uses eno3 on the host server to connect to the management LAN. The interface does not have an IP address configured

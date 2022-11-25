@@ -8,7 +8,7 @@ It is useful on servers in a lab were a testing envrionment may be required spor
 Following is a description on how to install, configure and build a virtual machine. 
 
 ## Prerequisites
-This VM creation tool is tested to run on a Ubuntu 20.04 host. Virtualization needs to be enabled and qemu/kvm installed. Setting upa  virtual host server is outside of the scope of this doc.
+This VM creation tool is tested to run on a Ubuntu 20.04 host. Virtualisation needs to be enabled and qemu/kvm installed. Setting upa  virtual host server is outside of the scope of this doc.
 
 ## 1. Clone acillary_vm
 The tool is a lean set of script files. Running the build script will download the Ubuntu image version (20.04 or 18.04) defined in the configuration file. 

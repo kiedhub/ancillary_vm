@@ -2,5 +2,5 @@ anc_vm-build
 anc_vm-build/*
 lacp-vm-build
 lacp-vm-build/*
-lacp-vm-build.conf
+lacp-vm.conf
 update

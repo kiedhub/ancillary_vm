@@ -57,7 +57,7 @@ default via 10.26.255.1 dev management proto static
 ##### Create management bridge
 The following netplan configuration shows the managemnet connectivity of the above example. Eno3 is connected to the management LAN, has no IP address configured, but is connected to the management bridge. The bridge itself gets the IP address configured to connect to the local network.
 ```
-cat /etc/netplan/00-installer-config.yaml 
+$ cat /etc/netplan/00-installer-config.yaml 
 # This is the network config written by 'subiquity'
 network:
   ethernets:
@@ -93,9 +93,9 @@ vmTemplate="ancillary"
 #### Virtual machine management interface and ip address
 The vm management interface defines the inteface name as shown in the virtual machine. For Ubuntu 20.04 this is ens3. It should be OK to leave the default value. If the installation fails, then it is worth to log into the created virtual machine via the console emulation and check on the name of the virtio inteface. This is the one to use as 'vmMgmtIf'.
 ```
-virsh console <vmName>
+$ virsh console <vmName>
 
-lshw -c network -businfo
+$ lshw -c network -businfo
 Bus info          Device      Class          Description
 ========================================================
 pci@0000:00:03.0              network        Virtio network device
@@ -119,12 +119,12 @@ vmMgmtBridge="management"
 #### Data and service interfaces
 In order to provide appropriate networking performance, interfaces connected to the SUT (e.g. MSR2400) will be passed through to the VM and they won't be available on the host system anymore. It is important to identify and chose the right interfaces. Generally one interface can be enough and all functions/services can be separated using VLANs. If a subscriber gets simulated and services are used, then it may make sense to use 2 interfaces, one for data and one for services.
 Finding available interfaces can be done via
-```sudo lshw -c network -businfo```
+```$ sudo lshw -c network -businfo```
 ##### Add the interfaces to the configuration file
 vmDevlist="enp216s0f1, enp216s0f2"
 
 #### Virtual machine settings
-It is possible to pin CPUs to the VM via ```vmCpuSet```. This makes most sense if those are isolated, a check via ```cat /proc/cmdline``` helps to clarify on it. 
+It is possible to pin CPUs to the VM via ```vmCpuSet```. This makes most sense if those are isolated, a check via ```$ cat /proc/cmdline``` helps to clarify on it. 
 
 Setting ```vmCpuSet=""``` does not strictly assign CPUs to the VM and leaves the assignment to KVM/qemu. Be aware the that CPUs may be shared across multiple VMs which may degrade the VM's performance. This is currently not supported.
 
@@ -133,14 +133,14 @@ Memory and vmVcpus should be set according to the services that will be enabled 
 ### Build virtual machine
 Once configuration is applied, the vm can be built using its configuration file name
 ```
-sudo bash
-./build_vm ancillary_vm.conf
+$ sudo bash
+$ ./build_vm ancillary_vm.conf
 ```
 ### Remove virtual machine
 Removing a virtual machine can be done the same way as building. The configuration file name is used to destroy, undefine and delete the virtual machine and its qcow2 file. Because of this it is recommended to use a separate configuration file for each newvirtual machine.
 ```
-sudo bash
-./remove ancillary_vm.conf
+$ sudo bash
+$ ./remove ancillary_vm.conf
 ```
 
 ### Virtual machine login credentials

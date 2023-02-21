@@ -134,13 +134,13 @@ Memory and vmVcpus should be set according to the services that will be enabled 
 Once configuration is applied, the vm can be built using its configuration file name
 ```
 $ sudo bash
-$ ./build_vm ancillary_vm.conf
+$ ./build_vm ancillary.conf
 ```
 ### Remove virtual machine
 Removing a virtual machine can be done the same way as building. The configuration file name is used to destroy, undefine and delete the virtual machine and its qcow2 file. Because of this it is recommended to use a separate configuration file for each newvirtual machine.
 ```
 $ sudo bash
-$ ./remove ancillary_vm.conf
+$ ./remove ancillary.conf
 ```
 
 ### Virtual machine login credentials

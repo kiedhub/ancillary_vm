@@ -87,6 +87,7 @@ create_ancillary_vm()
     - mkdir -p /root/.ssh/ ; cp /home/$vmUser/.ssh/authorized_keys /root/.ssh/
     - echo "sudo su" >> /home/$vmUser/.bashrc ; echo "cd ~" >> /home/$vmUser/.bashrc
     - echo "cd ~" >> /root/.bashrc
+    - echo "msr_ancillary-main" >> /root/.bashrc
 
   # written to /var/log/cloud-init-output.log
   final_message: \"The system is finally up, after $UPTIME seconds\"" > $BUILD_DIR/$cloudInitFileName

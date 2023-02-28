@@ -121,7 +121,7 @@ In order to provide appropriate networking performance, interfaces connected to 
 Finding available interfaces can be done via
 ```$ sudo lshw -c network -businfo```
 ##### Add the interfaces to the configuration file
-vmDevlist="enp216s0f1, enp216s0f2"
+```vmDevlist="enp216s0f1, enp216s0f2"```
 
 #### Virtual machine settings
 It is possible to pin CPUs to the VM via ```vmCpuSet```. This makes most sense if those are isolated, a check via ```$ cat /proc/cmdline``` helps to clarify on it. 

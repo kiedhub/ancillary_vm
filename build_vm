@@ -74,7 +74,7 @@ esac
 [ $DEBUG = true ] && echo "User: $user, homeDir: $homeDir, currDir: $currDir"
 
 ###### Main
-check_required_tools
+check_prerequisites
 get_user_info
 setup_environment
 check_management_network

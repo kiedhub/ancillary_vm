@@ -8,14 +8,29 @@
 #BUILD_DIR="$SCRIPT_DIR/$vmName"
 #[ $DEBUG = true ] && echo "BUILD_DIR: $BUILD_DIR"
 
-check_required_tools()
+check_prerequisites()
 {
+  # check virt-install installed
   virtinst_isInstalled=$(apt list | grep virtinst | grep installed | wc -l)
   #echo "virtinst_isInstalled: $virtinst_isInstalled"
   if [ $virtinst_isInstalled -lt 1 ]; then 
     echo "ERR: Required tool 'virt-install' not installed!"
     echo "Please install and re-run build_vm script"
     echo "   apt install virtinst"
+    exit 0
+  fi
+
+  # check iommu settings for intel CPUs
+  isIntelCpu=false
+  hasIommuSet=false
+  [ $(lscpu | grep GenuineIntel | wc -l) -gt 0 ] && isIntelCpu=True
+  [ $(cat /proc/cmdline | grep -o iommu | wc -l) -gt 1 ] && hasIommuSet=true
+
+  if ! ($isIntel & $hasIommuSet); then 
+    echo "ERR: Missing required iommu command line configuration"
+    echo "  add 'intel_iommu=on iommu=pt' to 'GRUB_CMDLINE_LINUX' configuration (/etc/default/grub)"
+    echo "  issue command 'sudo update-grub2' and reboot"
+    echo "  check after reboot: 'cat /proc/cmdline'"
     exit 0
   fi
 }

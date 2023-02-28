@@ -146,6 +146,6 @@ $ ./remove ancillary.conf
 ### Virtual machine login credentials
 Default username/password: casa/casa
 
-Since docker requires root privileges, the login scrip elevates user case at login. 
+Since docker requires root privileges, the login script elevates user 'casa' at login. 
 
 

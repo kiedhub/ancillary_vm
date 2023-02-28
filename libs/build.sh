@@ -8,6 +8,18 @@
 #BUILD_DIR="$SCRIPT_DIR/$vmName"
 #[ $DEBUG = true ] && echo "BUILD_DIR: $BUILD_DIR"
 
+check_required_tools()
+{
+  virtinst_isInstalled=$(apt list | grep virtinst | grep installed | wc -l)
+  #echo "virtinst_isInstalled: $virtinst_isInstalled"
+  if [ $virtinst_isInstalled -lt 1 ]; then 
+    echo "ERR: Required tool 'virt-install' not installed!"
+    echo "Please install and re-run build_vm script"
+    echo "   apt install virtinst"
+    exit 0
+  fi
+}
+
 get_user_info()
 {
   [ $DEBUG = true ] && echo "${FUNCNAME[0]}"

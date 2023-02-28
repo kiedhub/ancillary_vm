@@ -11,7 +11,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-# grab current directory
+
 currDir=$(pwd)
 
 ## set up logging
@@ -74,6 +74,7 @@ esac
 [ $DEBUG = true ] && echo "User: $user, homeDir: $homeDir, currDir: $currDir"
 
 ###### Main
+check_required_tools
 get_user_info
 setup_environment
 check_management_network

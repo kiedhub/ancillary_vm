@@ -28,7 +28,29 @@ currDir=$(pwd)
 # read configuration file
 #source ./build_vm.cfg
 #source ./ancillary.conf
-source ./lacp-vm.conf
+#source ./lacp-vm.conf
+
+# grab configuration
+SCRIPT_SOURCE=${BASH_SOURCE[0]}
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+#LIBS_DIR="$SCRIPT_DIR/libs"
+
+#. $LIBS_DIR/build.sh
+#. $LIBS_DIR/cloud_init.sh
+
+cd $SCRIPT_DIR
+
+config_file=$1
+
+! [ -e "$SCRIPT_DIR/$config_file" ] && { \
+  echo "VM configuration file \"$SCRIPT_DIR/$config_file\" not found!" ;\
+  exit;\
+}
+
+source $SCRIPT_DIR/$config_file
+
+echo "VM to remove: $vmName"
+
 
 #vmName="msr2400-demo"
 

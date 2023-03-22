@@ -79,6 +79,7 @@ create_ancillary_vm()
     - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"| sudo tee /etc/apt/sources.list.d/docker.list >/dev/null 
     - sudo apt-get update
     - sudo apt-get -y install docker.io docker-compose
+    - sudo apt-get -y install linux-modules-`uname -r`-generic
     - sudo docker pull rsattler/bgp-router
     - sudo docker pull rsattler/aaa-server
     - sudo docker pull rsattler/speedtest

@@ -87,7 +87,8 @@ There are a view important/mandatory configuration parameters that needs to be l
 #### Virtual machine name and template
 The configuration parameter vmName sets the unique name in the virtual environment. A unique name needs to be chosen, outherwise the build script will fail. In order to list all vm names that already exist use ```virsh list --all```. This provides a list of all vm definitions. The template defines the virtual machine profile and tools being installed, currently there are two profiles available, ancillary and pkt-gen. Default values
 ```
-vmName="anc_vm"
+# try avoiding "_", cause setting the VMs hostname to vmName will fail (invalid character in hostname)
+vmName="anc-vm"
 vmTemplate="ancillary"
 ```
 #### Virtual machine management interface and ip address

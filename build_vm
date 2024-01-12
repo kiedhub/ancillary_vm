@@ -66,6 +66,9 @@ case $vmToBuild in
   pkt-gen.conf)
     echo "pkt-gen.conf"
     ;;
+  registry.conf)
+    echo "registry.conf"
+    ;;
   *)
     echo "everything else.conf"
     ;;

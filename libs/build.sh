@@ -180,6 +180,7 @@ create_virtual_machine()
 
   [ $DEBUG = true ] && echo "  Creating file virt_install.sh and executing it"
 
+  [ -z $vmHostdevs ] && vmHostdevs="\\"
   echo "virt-install --accelerate \\
   --name $vmName \\
   --disk path=/var/lib/libvirt/images/$vmImageName,size=50,format=qcow2 \\

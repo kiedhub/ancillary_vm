@@ -1,5 +1,9 @@
 anc_vm-build
 anc_vm-build/*
+pkt-gen-demo
+pkt-gen-demo/*
+registry-build
+registry-build/*
 lacp-vm-build
 lacp-vm-build/*
 lacp-vm.conf

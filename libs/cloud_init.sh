@@ -19,6 +19,9 @@ create_cloud_init()
     pkt-gen)
       create_pktgen_vm
       ;;
+    registry)
+      create_registry_vm
+      ;;
     *)
       echo "Template not found"
       exit
@@ -159,6 +162,76 @@ create_pktgen_vm()
     - cp -R msr_ancillary-main/subscriber/* msr_ancillary-main/functions.sh msr_ancillary-main/ancillary.conf .
     - rm -rf msr_ancillary-main pkt-gen
 
+
+  # written to /var/log/cloud-init-output.log
+  final_message: \"The system is finally up, after $UPTIME seconds\"" > $BUILD_DIR/$cloudInitFileName
+}
+
+create_registry_vm()
+{
+  [ $DEBUG = true ] && echo "${FUNCNAME[0]}"
+
+  [ -e $BUILD_DIR/$cloudInitFileName ] && echo "Removing existing file $cloudInitFileName"; rm -f $BUILD_DIR/$cloudInitFileName;
+  echo "Creating $BUILD_DIR/$cloudInitFileName"
+
+  echo "#cloud-config
+  hostname: $vmHostname 
+  manage_etc_hosts: true
+  users:
+    - name: $vmUser
+      sudo: ALL=(ALL) NOPASSWD:ALL
+      groups: vmUsers, admin
+      home: /home/$vmUser
+      shell: /bin/bash
+      lock_passwd: false
+      ssh-authorized-keys:
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+ncGBon+AaKMWvAD0bQL+GnE1M3GKa8SOHDogd/ymAH2hTDRzCVgizFqy3mwGb194Iy1fogPov9bUgyPyUkqneYRCxjB0KXkeNBUsaUymBRqCZVsWQepCXGT3qXZ9RFVmN43zp+67ACSkc9XFecsXgEUR8GAOVsGFl17415HtYRPk8lre2+jaAqzsMfp5NJ89m9vPlvhvTPBvxheUz+XjCnYeoqByDlwk6IXjyb6D2zysTUuU/MKN277MUxydrOyuOgudTAcXXpcSg17Mv4bVisXPQnHY08qe7Buu2FLUsfq8ubv4Rrgal9JzuP1v3o/nEmRprWbinbidgHfs6tlF ralf
+        - $sshPubKey
+  # only cert auth via ssh (console access can still login)
+  ssh_pwauth: $vmSshPermitPasswordAuth 
+  disable_root: false
+  chpasswd:
+    list: |
+       $vmUser:$vmUserPwd
+       root:$vmUserPwd
+    expire: False
+  
+#  package_update: true
+#  package_upgrade: true
+
+  packages:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg
+    - lsb-release
+    - unzip
+    - net-tools
+    - make
+    - snmp
+    - snmp-mibs-downloader
+    - snmpd
+    - traceroute
+    - net-tools
+    - pppoe
+
+  runcmd:
+    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"| sudo tee /etc/apt/sources.list.d/docker.list >/dev/null 
+    - sudo apt-get update
+    - sudo apt-get -y install docker.io docker-compose
+    - sudo apt-get -y install linux-modules-`uname -r`-generic
+#    - sudo docker pull rsattler/bgp-router
+#    - sudo docker pull rsattler/aaa-server
+#    - sudo docker pull rsattler/speedtest
+#    - sudo docker pull rsattler/tacacs_plus
+    - cd /root ; curl -L -O https://github.com/kiedhub/msr_ancillary/archive/refs/heads/main.zip ; unzip main.zip ; rm -f main.zip
+    - mkdir -p /root/.ssh/ ; cp /home/$vmUser/.ssh/authorized_keys /root/.ssh/
+    - echo "sudo su" >> /home/$vmUser/.bashrc ; echo "cd ~" >> /home/$vmUser/.bashrc
+    - echo "cd ~" >> /root/.bashrc
+    - echo "msr_ancillary-main" >> /root/.bashrc
+    - sudo mkdir -p /root/certs ; cd /root/certs ; DOMAIN=registry.poc ; openssl req -x509 -newkey rsa:4096 -keyout $DOMAIN.key -out $DOMAIN.crt -days 3650 -nodes -subj '/CN=$DOMAIN'
+    - DOMAIN=registry.poc ; docker run -d --restart=always --name registry -v /root/certs:/certs -e REGISTRY_HTTP_ADDR=0.0.0.0:443 -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/$DOMAIN.crt -e REGISTRY_HTTP_TLS_KEY=/certs/$DOMAIN.key -p 5000:443 registry:2 
 
   # written to /var/log/cloud-init-output.log
   final_message: \"The system is finally up, after $UPTIME seconds\"" > $BUILD_DIR/$cloudInitFileName

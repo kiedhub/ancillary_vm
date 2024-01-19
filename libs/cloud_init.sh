@@ -303,8 +303,8 @@ create_harbor_vm()
     - echo "sudo su" >> /home/$vmUser/.bashrc ; echo "cd ~" >> /home/$vmUser/.bashrc
     - echo "cd ~" >> /root/.bashrc
     - echo "msr_ancillary-main" >> /root/.bashrc
-    - sudo mkdir -p /root/certs ; cd /root/certs ; DOMAIN=registry.poc ; openssl req -x509 -newkey rsa:4096 -keyout $DOMAIN.key -out $DOMAIN.crt -days 3650 -nodes -subj '/CN=$DOMAIN'
-    - DOMAIN=registry.poc ; docker run -d --restart=always --name registry -v /root/certs:/certs -e REGISTRY_HTTP_ADDR=0.0.0.0:443 -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/$DOMAIN.crt -e REGISTRY_HTTP_TLS_KEY=/certs/$DOMAIN.key -p 5000:443 registry:2 
+    - sudo mkdir -p /root/certs ; cd /root/certs ; DOMAIN=artifacts.poc ; openssl req -x509 -newkey rsa:4096 -keyout $DOMAIN.key -out $DOMAIN.crt -days 3650 -nodes -subj '/CN=$DOMAIN'
+    #- DOMAIN=artifacts.poc ; docker run -d --restart=always --name registry -v /root/certs:/certs -e REGISTRY_HTTP_ADDR=0.0.0.0:443 -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/$DOMAIN.crt -e REGISTRY_HTTP_TLS_KEY=/certs/$DOMAIN.key -p 5000:443 registry:2 
 
   # written to /var/log/cloud-init-output.log
   final_message: \"The system is finally up, after $UPTIME seconds\"" > $BUILD_DIR/$cloudInitFileName

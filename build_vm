@@ -69,6 +69,9 @@ case $vmToBuild in
   registry.conf)
     echo "registry.conf"
     ;;
+  harbor.conf)
+    echo "registry.conf"
+    ;;
   *)
     echo "everything else.conf"
     ;;
